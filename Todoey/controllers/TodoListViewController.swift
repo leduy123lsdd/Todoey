@@ -24,7 +24,7 @@ class TodoListViewController: UITableViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         // Layout design
-        self.navigationItem.title = "Todo Application"
+        self.navigationItem.title = "List"
         
         // Load data from database
         
