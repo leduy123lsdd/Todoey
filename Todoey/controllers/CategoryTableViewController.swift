@@ -9,7 +9,8 @@
 import UIKit
 import RealmSwift
 
-class CategoryTableViewController: UITableViewController {
+class CategoryTableViewController: SwipeTableViewController {
+    
     let realm = try! Realm()
     var categories: Results<Category>?
 
@@ -19,15 +20,16 @@ class CategoryTableViewController: UITableViewController {
         self.navigationItem.title = "Category Items"
         
         loadCategory()
+        tableView.rowHeight = 80.0
     }
 
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet"
-        
+
         return cell
     }
 
@@ -39,10 +41,6 @@ class CategoryTableViewController: UITableViewController {
     //MARK: - Table view delegate methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //        context.delete(categoryArray[indexPath.row])
-        //        categoryArray.remove(at: indexPath.row)
-        //        items[indexPath.row].done = !items[indexPath.row].done
-        //        saveCategory()
         performSegue(withIdentifier: "goToItem", sender: self)
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -74,7 +72,22 @@ class CategoryTableViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
-
+    override func swipeDelete(index: IndexPath) {
+        super.swipeDelete(index: index)
+        if let currentCategory = categories?[index.row] {
+            do {
+                try realm.write {
+                    realm.delete(currentCategory)
+                }
+            }
+            catch {
+                print("Error swipe delete category: \(error)")
+            }
+            tableView.reloadData()
+        }
+    }
+    
+    
     //MARK: - add button pressed
     @IBAction func barButtonPressed(_ sender: Any) {
         var textField = UITextField()
@@ -96,3 +109,4 @@ class CategoryTableViewController: UITableViewController {
     }
     
 }
+
