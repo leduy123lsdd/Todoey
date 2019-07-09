@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class CategoryTableViewController: SwipeTableViewController {
     
@@ -18,18 +19,26 @@ class CategoryTableViewController: SwipeTableViewController {
         super.viewDidLoad()
         // Set bar title
         self.navigationItem.title = "Category Items"
+        //self.navigationController?.navigationBar.barTintColor = UIColor(hexString: randomColor())
         
         loadCategory()
         tableView.rowHeight = 80.0
+        tableView.separatorStyle = .singleLine
     }
 
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        // get color of category
+//        if let currentCategory = categories?[indexPath.row] {
+//            let color : UIColor = UIColor(hexString: currentCategory.color) ?? UIColor(hexString: "1D9BF6")!
+//            cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+//        }
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet"
-
+        cell.backgroundColor = UIColor(hexString: categories?[indexPath.row].color ?? "1D9BF6")
+        
         return cell
     }
 
@@ -97,6 +106,8 @@ class CategoryTableViewController: SwipeTableViewController {
             let newCategory = Category()
             
             newCategory.name = textField.text!
+//            newCategory.color = RandomFlatColor().hexValue()
+            newCategory.color = self.randomColor()
             self.save(category: newCategory)
         }
         
@@ -106,6 +117,21 @@ class CategoryTableViewController: SwipeTableViewController {
         }
         alert.addAction(action)
         present(alert, animated: true,completion: nil)
+    }
+    
+    //Random color
+    func randomColor() -> String {
+        
+        let colors = [UIColor.flatRed.hexValue(),
+                      UIColor.flatOrange.hexValue(),
+                      UIColor.flatYellow.hexValue(),
+                      UIColor.flatGreen.hexValue(),
+                      UIColor.flatPink.hexValue(),
+                      UIColor.flatLime.hexValue(),
+                      UIColor.flatWatermelon.hexValue()]
+        
+        let pickColor = colors[Int.random(in: 0..<colors.count)]
+        return pickColor
     }
     
 }

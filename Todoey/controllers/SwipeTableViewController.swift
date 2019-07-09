@@ -13,12 +13,16 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
     }
     
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") as! SwipeTableViewCell
+        cell.layer.cornerRadius = 8
+        //cell.layer.masksToBounds = true
+        cell.layer.borderWidth = 3
+        cell.layer.borderColor = UIColor.white.cgColor
         cell.delegate = self
         return cell
     }
@@ -42,7 +46,7 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         var options = SwipeOptions()
         
         options.transitionStyle = .reveal
-        options.expansionStyle  = .none
+        options.expansionStyle = .none
         
         return options
     }
